@@ -55,6 +55,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
 from email.parser import FeedParser
 
+from httplib2 import HttpLib2Error
+
 # Oauth2client < 3 has the positional helper in 'util', >= 3 has it
 # in '_helpers'.
 try:
@@ -169,6 +171,8 @@ def _retry_request(http, num_retries, req_type, sleep, rand, uri, method, *args,
           'WSAETIMEDOUT', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED', ):
         raise
       exception = socket_error
+    except HttpLib2Error as http2lib_error:
+      exception = http2lib_error
 
     if exception:
       if retry_num == num_retries:
